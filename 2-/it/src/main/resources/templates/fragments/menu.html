@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="menuFragment" class="menu-fragment">
+    <div class="menu">
+        <ul>
+<!--            <li><a href="main.html" th:href="@{festivals}">축제 좌표</a></li>-->
+            <li><a href="javascript:void(0);" onclick="navigateToHome1()">지도</a></li>
+            <script>
+                function navigateToHome1() {
+                    window.location.href = "/festivals"; // 이동할 페이지 URL 입력
+                }
+            </script>
+            <li><a href="javascript:void(0);" onclick="navigateTostats()">통계</a></li>
+            <script>
+                function navigateTostats() {
+                    window.location.href = "/stats"; // 이동할 페이지 URL 입력
+                }
+            </script>
+        </ul>
+    </div>
+</div>
+</html>

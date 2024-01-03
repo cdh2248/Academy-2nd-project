@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<div th:fragment="asideFragment" class="aside-fragment">
+
+    <div class="aside">
+        <div class = "graph">
+            <div><input type="button"  value="내위치">부평구</div>
+            <canvas id="chart" width="500" height="400"></canvas>
+            <input type="hidden" name="rainJson" th:value="${rainjson}">
+            <input type="hidden" name="myRainJson" th:value="${myRainjson}">
+            <input type="button" id="my-button" value="강수량">
+            <input type="button" id="my-button2" value="기온">
+        </div>
+    </div>
+</div>
+
+
+
+</html>

@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+}
+.container{
+    height: 100vh;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 100px 1fr 500px;
+    grid-template-rows: 100px 150px 1fr;
+    grid-template-areas: 'header header header'
+                         'menu main top'
+                         'menu main aside';
+}
+.container div {
+    background-color: skyblue;
+
+
+
+
+}
+/*               헤드                */
+.header {
+    grid-area: header;
+}
+.title {
+    text-align: center;
+}
+
+
+
+
+
+
+/*                메뉴                */
+.menu {
+    grid-area: menu;
+}
+.main {
+    grid-area: main;
+}
+
+/*                top 로그인                          */
+.top {
+    grid-area: top;
+}
+
+.login {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.id {
+    width: 250px;
+    height: 30px;
+    margin: 5px;
+}
+
+.password {
+    width: 250px;
+    height: 30px;
+    margin: 5px;
+
+}
+/*                      사이드 바                             */
+.aside {
+    grid-area:aside;
+}

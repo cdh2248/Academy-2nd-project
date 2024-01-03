@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Example</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 웹소켓 연결
+            var socket = new WebSocket("ws://localhost:8000/");
+
+            // 웹소켓 연결 성공 시 이벤트 핸들러
+            socket.onopen = function(event) {
+                console.log("WebSocket connected.");
+            };
+
+            // 웹소켓으로부터 데이터 수신 시 이벤트 핸들러
+            socket.onmessage = function(event) {
+                var receivedData = event.data;
+                console.log("Received data: " + receivedData);
+
+                updateTable(receivedData);
+
+            };
+
+
+
+
+            // 웹소켓 연결 종료 시 이벤트 핸들러
+            socket.onclose = function(event) {
+                console.log("WebSocket disconnected.");
+            };
+        });
+        function updateTable(data) {
+            // Parse the received JSON data
+           var students = JSON.parse(data);
+           //  student = data
+            // Get the table body element
+            var tableBody = $('#student-table tbody');
+
+            // Clear the existing table rows
+            tableBody.empty();
+
+            // Loop through the students data and create new table rows
+            students.forEach(function(student) {
+                // Create a new table row
+                var row = $('<tr>');
+
+                // Create table cells for each student property
+                var nameCell = $('<td>').text(student.name);
+                var koreanCell = $('<td>').text(student.korean);
+                var englishCell = $('<td>').text(student.english);
+                var mathCell = $('<td>').text(student.math);
+
+                // Append the cells to the row
+                row.append(nameCell, koreanCell, englishCell, mathCell);
+
+                // Append the row to the table body
+                tableBody.append(row);
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>학생 정보 테이블</h1>
+<table id="student-table">
+    <thead>
+    <tr>
+        <th>이름</th>
+        <th>국어</th>
+        <th>영어</th>
+        <th>수학</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 초기 데이터로 홍길동, 이순신, 강감찬 추가 -->
+    <tr>
+        <td>홍길동</td>
+        <td>85</td>
+        <td>90</td>
+        <td>95</td>
+    </tr>
+    <tr>
+        <td>이순신</td>
+        <td>90</td>
+        <td>92</td>
+        <td>88</td>
+    </tr>
+    <tr>
+        <td>강감찬</td>
+        <td>88</td>
+        <td>87</td>
+        <td>94</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

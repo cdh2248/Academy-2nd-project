@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Price Chart</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<canvas id="chart"></canvas>
+
+<script>
+    $(document).ready(function () {
+        var socket = new WebSocket("ws://localhost:8060");  // WebSocket 연결
+
+        var labels = [];  // X축 레이블
+        var datasets = [];  // 데이터셋
+
+        var ctx = document.getElementById("chart").getContext("2d");
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Stock Price'
+                        }
+                    }
+                }
+            }
+        });
+
+        socket.onmessage = function (event) {
+            var data = JSON.parse(event.data);  // 받은 데이터 파싱
+            var time = new Date().toLocaleTimeString();  // 현재 시간
+
+            // 데이터 업데이트
+            labels.push(time);
+            for (var i = 0; i < data.length; i++) {
+                var company = data[i].company;
+                var price = data[i].price;
+
+                // 해당 회사 데이터셋이 존재하지 않으면 생성
+                if (!datasets[i]) {
+                    datasets[i] = {
+                        label: company,
+                        data: [],
+                        borderColor: getRandomColor(),
+                        fill: false
+                    };
+                }
+
+                // 데이터셋에 데이터 추가
+                datasets[i].data.push(price);
+            }
+
+            // 최대 10개의 데이터 유지
+            if (labels.length > 10) {
+                labels.shift();  // 가장 오래된 데이터 제거
+                for (var i = 0; i < datasets.length; i++) {
+                    datasets[i].data.shift();  // 가장 오래된 데이터 제거
+                }
+            }
+
+            // 차트 업데이트
+            chart.update();
+        };
+
+        // 랜덤한 색상 생성
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+}
+
+.bwj_container{
+    height: 100vh;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 300px 1fr 700px;
+    grid-template-rows: 72px 1fr;
+    grid-template-areas: 'header header header'
+                         'menu main aside';
+}
+/*.container div {*/
+/*    background-color: skyblue;*/
+/*}*/
+
+
+
+.header {
+    grid-area: header;
+}
+
+/*.title {*/
+/*    text-align: center;*/
+/*}*/
+
+
+
+
+
+
+.menu {
+    grid-area: menu;
+}
+.main {
+    grid-area: main;
+}
+
+/*.top {*/
+/*    grid-area: top;*/
+/*}*/
+
+/*.login {*/
+/*    text-align: center;*/
+/*    padding-top: 20px;*/
+/*}*/
+
+/*.id {*/
+/*    width: 250px;*/
+/*    height: 30px;*/
+/*    margin: 5px;*/
+/*}*/
+
+/*.password {*/
+/*    width: 250px;*/
+/*    height: 30px;*/
+/*    margin: 5px;*/
+
+/*}*/
+.aside {
+    grid-area:aside;
+}
+
+.bg-light{
+    height: 100%;
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>막대 그래프</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            max-width: 800px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+<canvas id="myChart"></canvas>
+
+<script>
+    // 데이터
+    var data = [
+        {"category": "의류", "sales": 1000},
+        {"category": "전자제품", "sales": 2000},
+        {"category": "가구", "sales": 1500},
+        {"category": "식품", "sales": 3000}
+    ];
+
+    // 카테고리 배열
+    var categories = data.map(function(item) {
+        return item.category;
+    });
+
+    // 판매량 배열
+    var sales = data.map(function(item) {
+        return item.sales;
+    });
+
+    // 차트 생성
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: categories,
+            datasets: [{
+                label: '판매량',
+                data: sales,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+
+            }]
+        },
+        options: {
+            scales: {
+                y: { // y축 라벨 설정
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 24
+                        }
+                    }
+                },
+                x: { // x축 라벨 설정
+                    ticks: {
+                        font: {
+                            size: 24
+                        }
+                    }
+                }
+            },
+
+            plugins: { // 판매량 폰트 지정
+                legend: {
+                    labels: {
+                        font: {
+                            size: 24
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

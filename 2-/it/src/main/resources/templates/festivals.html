@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e1e551e15865fab2a76df10ea5a01b79"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link th:href="@{/css/template.css}" rel="stylesheet">
+    <script th:src="@{/js/chart.js}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <title>카카오맵 검색 기능 추가</title>
+    <style>
+        .map_wrap, .map_wrap * { margin: 0; padding: 0; font-family: 'Malgun Gothic', dotum, '돋움', sans-serif; font-size: 12px; z-index: 10;}
+        .map_wrap a, .map_wrap a:hover, .map_wrap a:active { color: #000; text-decoration: none; }
+        .map_wrap { position: relative; width: 100%; height: 1000px; }
+        #menu_wrap { position: absolute; top: 0; left: 0; width: 250px; margin: 10px 0 30px 10px; padding: 5px; overflow-y: auto; background: rgba(255, 255, 255, 0.7); z-index: 10; font-size: 12px; border-radius: 10px; }
+        .bg_white { background: #fff; }
+        #menu_wrap hr { display: block; height: 1px; border: 0; border-top: 2px solid #5F5F5F; margin: 3px 0; }
+        #menu_wrap .option { text-align: center; }
+        #menu_wrap .option p { margin: 10px 0; }
+        #menu_wrap .option button { margin-left: 5px; }
+        #placesList li { list-style: none; }
+        #placesList .item { position: relative; border-bottom: 1px solid #888; overflow: hidden; cursor: pointer; min-height: 65px; }
+        #placesList .item span { display: block; margin-top: 4px; }
+        #placesList .item h5, #placesList .item .info { text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        #placesList .info .gray { color: #8a8a8a; }
+        #placesList .info .jibun { padding-left: 26px; background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat; }
+        #placesList .info .tel { color: #009900; }
+        #placesList .item .markerbg { float: left; position: absolute; width: 36px; height: 37px; margin: 10px 0 0 10px; background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat; }
+        #placesList .item .marker_1 { background-position: 0 -10px; }
+        #placesList .item .marker_2 { background-position: 0 -56px; }
+        #placesList .item .marker_3 { background-position: 0 -102px }
+        #placesList .item .marker_4 { background-position: 0 -148px; }
+        #placesList .item .marker_5 { background-position: 0 -194px; }
+        #placesList .item .marker_6 { background-position: 0 -240px; }
+        #placesList .item .marker_7 { background-position: 0 -286px; }
+        #placesList .item .marker_8 { background-position: 0 -332px; }
+        #placesList .item .marker_9 { background-position: 0 -378px; }
+        #placesList .item .marker_10 { background-position: 0 -423px; }
+        #placesList .item .marker_11 { background-position: 0 -470px; }
+        #placesList .item .marker_12 { background-position: 0 -516px; }
+        #placesList .item .marker_13 { background-position: 0 -562px; }
+        #placesList .item .marker_14 { background-position: 0 -608px; }
+        #placesList .item .marker_15 { background-position: 0 -654px; }
+        #pagination { margin: 10px auto; text-align: center; }
+        #pagination a { display: inline-block; margin-right: 10px; }
+        #pagination .on { font-weight: bold; cursor: default; color: #777; }
+    </style>
+</head>
+<body>
+<!--    <div th:include="fragments/header :: header" class="header"></div>-->
+    <header class="header">
+    <header class="p-3 text-bg-dark">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+                </a>
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="javascript:void(0);" onclick="navigateToHome()" class="nav-link px-2 text-secondary">Home</a></li>
+                    <script>
+                        function navigateToHome() {
+                            window.location.href = "/muhanscroll"; // 이동할 페이지 URL 입력
+                        }
+                    </script>
+                    <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+                </ul>
+
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                    <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
+                </form>
+
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-light me-2">Login</button>
+                    <button type="button" class="btn btn-warning">Sign-up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    </header>
+<!--    <div th:include="fragments/menu :: div" class="menu"></div>-->
+<!--        <div class="menu">-->
+<!--            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light">-->
+<!--                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">-->
+<!--                    <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>-->
+<!--                    <span class="fs-4">Sidebar</span>-->
+<!--                </a>-->
+<!--                <hr>-->
+<!--                <ul class="nav nav-pills flex-column mb-auto">-->
+<!--                    <li class="nav-item">-->
+<!--                        <a href="#" class="nav-link active" aria-current="page">-->
+<!--                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>-->
+<!--                            Home-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#" class="nav-link link-dark">-->
+<!--                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>-->
+<!--                            Dashboard-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#" class="nav-link link-dark">-->
+<!--                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>-->
+<!--                            Orders-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#" class="nav-link link-dark">-->
+<!--                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>-->
+<!--                            Products-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#" class="nav-link link-dark">-->
+<!--                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>-->
+<!--                            Customers-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--                <hr>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--</div>-->
+<!--<div id="map" style="width:100%;height:350px;"></div>-->
+<div class="map_wrap">
+    <div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden;"></div>
+
+    <div id="menu_wrap" class="bg_white">
+        <div class="option">
+            <div>
+                <form id="myForm" action="/festivalsAll" th:action="@{/festivalsAll}" method="post">
+                    전체축제 검색 : <input type="text" value="" name="keyword" size="15">
+                    <button type="submit">검색하기</button>
+                </form>
+            </div>
+        </div>
+        <div class="option">
+            <div>
+                <form id="myForm2" action="/festivalsIll" th:action="@{/festivalsIll}" method="post">
+                    예정축제 검색 : <input type="text" value="" name="keyword" size="15">
+                    <button type="submit">검색하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--        <hr>-->
+<!--        <ul id="placesList"></ul>-->
+<!--        <div id="pagination"></div>-->
+<!--    <div th:include="fragments/top :: div" class="top"></div>-->
+<!--    <div th:include="fragments/aside :: div" class="aside"></div>-->
+<!--    <div class="aside">-->
+<!--        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light">-->
+<!--            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">-->
+<!--                <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>-->
+<!--                <span class="fs-4">Sidebar</span>-->
+<!--            </a>-->
+<!--            <hr>-->
+<!--            <ul class="nav nav-pills flex-column mb-auto">-->
+<!--                <li class="nav-item">-->
+<!--                    <a href="#" class="nav-link active" aria-current="page">-->
+<!--                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>-->
+<!--                        Home-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a href="#" class="nav-link link-dark">-->
+<!--                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>-->
+<!--                        Dashboard-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a href="#" class="nav-link link-dark">-->
+<!--                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>-->
+<!--                        Orders-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a href="#" class="nav-link link-dark">-->
+<!--                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>-->
+<!--                        Products-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a href="#" class="nav-link link-dark">-->
+<!--                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>-->
+<!--                        Customers-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--            <hr>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<script th:inline="javascript">
+    var mapContainer = document.getElementById('map');
+    var mapOption = {
+        center: new kakao.maps.LatLng(37.335887, 126.584063),
+        level: 10
+    };
+
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+    var df = /*[[${festivals}]]*/ []; // 타임리프 데이터를 자바스크립트로 가져옴
+
+    positions = [];
+    for (var i = 0; i < df.length; i++) {
+        var row = df[i];
+        positions.push({
+            index: row.findex,
+            title: row.fname,
+            latlng: new kakao.maps.LatLng(row.latitude, row.hardness),
+            opend: row.openDate,
+            closed: row.closeDate
+        });
+    }
+
+    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    var imageSize = new kakao.maps.Size(24, 35);
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+    for (var i = 0; i < positions.length; i++) {
+        var marker = new kakao.maps.Marker({
+            map: map,
+            index: positions[i].index,
+            position: positions[i].latlng,
+            title: positions[i].title,
+            image: markerImage,
+            open: positions[i].opend,
+            close: positions[i].closed
+        });
+
+
+        var info = '<h3>' + positions[i].title + '</h3>' + '<p>' + positions[i].opend + '</p>' + '<p>' + positions[i].closed + '</p>';
+        var infowindow = new kakao.maps.InfoWindow({
+            content: info
+        });
+
+        kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+        kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+        kakao.maps.event.addListener(marker, 'click', makeClickListener(positions[i].index));
+    }
+
+
+    function makeOverListener(map, marker, infowindow) {
+        return function () {
+            infowindow.open(map, marker);
+        };
+    }
+
+    function makeOutListener(infowindow) {
+        return function () {
+            infowindow.close();
+        };
+    }
+
+    function makeClickListener(index) {
+        return function () {
+            window.location.href = "festival/" + index;
+        };
+    }
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+</html>
+

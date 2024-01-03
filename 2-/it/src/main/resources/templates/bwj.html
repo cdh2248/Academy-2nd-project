@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!--    <script src =/static/js/chart.js></script>-->
+    <script src =/static/js/chart2.js></script>
+    <script>
+        $(function (){
+            $(".header").load("header.html");
+            $(".top").load("/templates/top.html");
+            $(".menu").load("templates/menu.html");
+            $(".aside").load("templates/aside.html");
+        })
+    </script>
+</head>
+ <style>
+    @import "/css/template.css";
+</style>
+<body>
+    <div class="container">
+        <div class="header"></div>
+        <div class="top"></div>
+        <div class="main">
+<!--------------------------------------------------------------------->
+<!--            <style>-->
+<!--                section {-->
+<!--                    /*position: absolute;*/-->
+<!--                    width: 1000px;-->
+<!--                    /*height: 500px;*/-->
+<!--                    height: auto;-->
+<!--                }-->
+
+<!--                .boxs {-->
+<!--                    flex: 1;-->
+<!--                    display: flex;-->
+<!--                    flex-wrap: wrap;-->
+<!--                    gap: 20px;-->
+<!--                }-->
+
+<!--                .box {-->
+<!--                    background: tomato;-->
+<!--                    color: white;-->
+<!--                    box-sizing: border-box;-->
+<!--                    padding: 20px;-->
+<!--                    margin: 20px;-->
+<!--                    width: 500px;-->
+<!--                    display: flex;-->
+<!--                    flex-direction: row;-->
+<!--                    align-items: center;-->
+<!--                    justify-content: space-between; /* 요소 사이에 공간을 균등하게 배분 */-->
+<!--                }-->
+<!--                .even-box {background:teal;}-->
+
+<!--                .box-info {-->
+<!--                    display: flex;-->
+<!--                    flex-direction: column;-->
+<!--                    margin-left: 20px;-->
+<!--                    align-items: flex-end;-->
+<!--                }-->
+
+<!--                .box-info p {-->
+<!--                    margin: 5px;-->
+<!--                }-->
+
+<!--                /* Additional classes for different text styles */-->
+<!--                .large-text {-->
+<!--                    font-size: 24px;-->
+<!--                    font-weight: bold;-->
+<!--                }-->
+
+<!--                .small-text {-->
+<!--                    font-size: 14px;-->
+<!--                }</style>-->
+<!--            <div class="boxs" th:each="festival, iterStat : ${festivals}">-->
+<!--                <section>-->
+<!--                    <a th:style="'text-decoration: none;'" th:href="@{/festival/{id}(id=${festival.getFIndex()})}" th:class="${iterStat.even} ? 'box even-box' : 'box box'">-->
+<!--                        &lt;!&ndash; Large text for the name &ndash;&gt;-->
+<!--                        <span class="large-text" th:text="${festival.getFName()}"></span>-->
+<!--                        <div class="box-info">-->
+<!--                            &lt;!&ndash; Small text for additional information &ndash;&gt;-->
+<!--                            <p th:utext="'시작일: ' + ${#dates.format(festival.getOpenDate(), 'yyyy년 MM월 dd일 a hh시 mm분')}"></p>-->
+<!--                            <p th:utext="'종료일: ' + ${#dates.format(festival.getCloseDate(), 'yyyy년 MM월 dd일 a hh시 mm분')}"></p>-->
+<!--                            <p class="small-text" th:text="'장소: ' + ${festival.getADDRESS()}"></p>-->
+<!--                        </div>-->
+<!--                        <div id="bwj">ㅇㅇ</div>-->
+<!--                    </a>-->
+<!--                </section>-->
+<!--            </div>-->
+<!--------------------------------------------------------------------->
+        </div>
+        <div class="menu"></div>
+        <div class="aside"></div>
+    </div>
+</body>
+</html>

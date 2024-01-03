@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Example</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .message {
+            color: blue;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 웹소켓 연결
+            var socket = new WebSocket("ws://localhost:8060/");
+
+            // 웹소켓 연결 성공 시 이벤트 핸들러
+            socket.onopen = function(event) {
+                console.log("WebSocket connected.");
+            };
+
+            // 웹소켓으로부터 데이터 수신 시 이벤트 핸들러
+            socket.onmessage = function(event) {
+                var receivedData = JSON.parse(event.data); // 데이터를 JSON으로 파싱
+
+                updateTable(receivedData);
+
+                $('td').filter(function() {
+                    return $(this).text() === receivedData.name;
+                });
+
+                // 현재 시간을 가져와서 데이터 갱신 메시지 생성
+                var currentTime = new Date().toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric'
+                });
+
+                var message = "데이터가 갱신되었습니다. " + getCurrentTime();
+
+                // 갱신 메시지를 표시
+                var updateMessage = $('<div>').text(message).addClass('message'); // 메시지에 클래스 추가
+                $('#message-container').empty().append(updateMessage); // 기존 메시지를 지우고 새 메시지 추가
+
+                var blinkCount = 5
+               // blinkText(updateMessage, blinkCount); // 메시지 엘리먼트를 전달하여 깜빡이도록 호출
+                for (var i = 0; i < blinkCount; i++) {
+                    setTimeout(function() {
+                        blinkText(updateMessage, 1); // 1번 깜빡이도록 호출
+                    }, i * 2000); // 각 호출 간격을 2초로 설정 (2000ms)
+                }
+            };
+
+            // 웹소켓 연결 종료 시 이벤트 핸들러
+            socket.onclose = function(event) {
+                console.log("WebSocket disconnected.");
+            };
+        });
+
+        function updateTable(data) {
+            var tableBody = $('#student-table tbody');
+            tableBody.empty();
+
+            // 데이터를 테이블에 추가
+            $.each(data, function(index, item) {
+                var row = '<tr><td>' + item.name + '</td><td>' + item.korean + '</td><td>' + item.english + '</td><td>' + item.math + '</td></tr>';
+                tableBody.append(row);
+            });
+        }
+
+        function blinkText(element, count) {
+            element.addClass("blink"); // 깜빡이는 클래스 추가
+
+            setTimeout(function() {
+                element.removeClass("blink"); // 깜빡이는 클래스 제거
+
+                if (count > 1) {
+                    setTimeout(function() {
+                        blinkText(element, count - 1); // 다음 깜빡임 호출
+                    }, 1000); // 1초 후에 다음 깜빡임 호출
+                }
+            }, 1000); // 1초 후에 클래스 제거
+        }
+
+
+        // function blinkText(element) {
+        //     element.addClass("blink"); // 깜빡이는 클래스 추가
+        //
+        //     setTimeout(function() {
+        //         element.removeClass("blink"); // 깜빡이는 클래스 제거
+        //     }, 1000); // 1초 후에 클래스 제거
+        // }
+
+        // 현재 시간 정보 가져오기
+        function getCurrentTime() {
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = currentDate.getMonth() + 1;
+            var day = currentDate.getDate();
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
+
+            var formattedTime = year + "년 " + month + "월 " + day + "일 " + formatTime(hours, minutes);
+            return formattedTime;
+        }
+
+        // 시간 포맷팅 함수
+        function formatTime(hours, minutes) {
+            var period = (hours >= 12) ? "오후" : "오전";
+            hours = hours % 12;
+            hours = (hours === 0) ? 12 : hours;
+            minutes = (minutes < 10) ? "0" + minutes : minutes;
+
+            return period + " " + hours + "시 " + minutes + "분";
+        }
+    </script>
+</head>
+<body>
+<h1>학생 정보 테이블</h1>
+<div id="message-container"></div>
+<table id="student-table">
+    <thead>
+    <tr>
+        <th>이름</th>
+        <th>국어</th>
+        <th>영어</th>
+        <th>수학</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 초기 데이터로 홍길동, 이순신, 강감찬 추가 -->
+    <tr>
+        <td>홍길동</td>
+        <td>85</td>
+        <td>90</td>
+        <td>95</td>
+    </tr>
+    <tr>
+        <td>이순신</td>
+        <td>90</td>
+        <td>92</td>
+        <td>88</td>
+    </tr>
+    <tr>
+        <td>강감찬</td>
+        <td>88</td>
+        <td>87</td>
+        <td>94</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

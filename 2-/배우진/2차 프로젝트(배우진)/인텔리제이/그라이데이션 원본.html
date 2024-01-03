@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <canvas id="chart"></canvas>
+</head>
+<body>
+<script>
+    var ctx = document.getElementById("chart").getContext("2d");
+
+    const DATA_COUNT = 7;
+    const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 100};
+    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Dataset 1',
+                data: [40, 25, 27, 28, 34, 22, 10], // 랜덤한 데이터를 대신 사용합니다.
+                borderColor: function(context) {
+                    const chart = context.chart;
+                    const {ctx, chartArea} = chart;
+
+                    if (!chartArea) {
+                        // This case happens on initial chart load
+                        return;
+                    }
+                    return getGradient(ctx, chartArea);
+                },
+            },
+        ]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+            }
+        },
+    };
+
+    let width, height, gradient;
+    function getGradient(ctx, chartArea) {
+        const chartWidth = chartArea.right - chartArea.left;
+        const chartHeight = chartArea.bottom - chartArea.top;
+        if (!gradient || width !== chartWidth || height !== chartHeight) {
+            // Create the gradient because this is either the first render
+            // or the size of the chart has changed
+            width = chartWidth;
+            height = chartHeight;
+            gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+            gradient.addColorStop(0, 'blue');
+            gradient.addColorStop(0.35, 'yellow');
+            gradient.addColorStop(0.95, 'red');
+        }
+
+        return gradient;
+    }
+
+    new Chart(ctx,config)
+
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<link th:href="@{/css/login.css}"
+      href="css/login.css" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+<div class="login-wrapper">
+  <h2>Login</h2>
+  <form action="/index.html" th:action th:object="${loginForm}" method="post">
+
+    <!-- hasGlobalErrors() : 전역 오류에 값이 있는지 확인-->
+    <div th:if="${#fields.hasGlobalErrors()}">
+      <!-- globalErros() : 전체 오류의 메세지를 반환 -->
+      <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
+    </div>
+
+    <div>
+      <label for="loginId">로그인 ID</label>
+      <input type="text" id="loginId" th:field="*{loginId}" class="form-control"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{loginId}" />
+    </div>
+    <div>
+      <label for="password">비밀번호</label>
+      <input type="password" id="password" th:field="*{password}" class="form-control"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{password}" />
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+      <div class="col">
+        <button class="w" type="submit">로그인</button>
+      </div>
+      <div class="col">
+        <button class="w" onclick="location.href='index.html'"
+                th:onclick="|location.href='@{/}'|"
+                type="button">취소</button>
+      </div>
+    </div>
+
+  </form>
+  <button class="w" onclick="location.href='plus.html'"
+          th:onclick="|location.href='@{/}'|"
+          type="button">회원가입</button>
+</div>
+</body>
+</html>

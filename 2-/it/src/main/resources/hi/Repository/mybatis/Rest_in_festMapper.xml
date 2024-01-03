@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="hi.Repository.mybatis.Rest_in_festMapper">
+    <select id="Rest_in_festMapper" resultType="Rest_in_fest">
+        select F_N as FN, STARS, REVIEW_CO as REVIEWCO, REVIEW, GO_N as GON
+        from REST_IN_FEST
+    </select>
+
+    <select id="findRestInFest" resultType="Rest_in_fest">
+        select F_N as FN, STARS, REVIEW_CO as REVIEWCO, REVIEW, GO_N as GON
+        from REST_IN_FEST2
+        WHERE GO_N = #{go} AND ROWNUM = 1
+    </select>
+
+
+
+
+
+</mapper>

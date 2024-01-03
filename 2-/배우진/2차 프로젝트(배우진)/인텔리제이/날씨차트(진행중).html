@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Price Chart</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<canvas id="chart"></canvas>
+
+<script>
+    $(document).ready(function () { // HTML 문서가 로드될 때 실행되는 함수를 정의
+        // ws: WebSocket프로토콜을 사용한다는 의미
+        // new WebSocket는 웹소켓 클라이언트 객체를 생성하는데 생성자에 서버의 주소를 전달해야함
+        var socket = new WebSocket("ws://localhost:8060");  // WebSocket 연결
+
+        var labels = [];  // X축 레이블
+        var datasets = [];  // 데이터셋
+
+        var ctx = document.getElementById("chart").getContext("2d"); // <canvas> 요소를 선택하고 그려질 2D 캔버스를 가져옴
+        var chart = new Chart(ctx, { // new Chart는 Chart.js 라이브러리를 사용하기 위함
+            type: 'line', // 차트의 유형 , bar, pie 등 있음
+            data: { // 차트에 표시 될 데이터
+                labels: labels, // x축의 표시될 라벨들의 배열
+                datasets: datasets // 그래프의 데이터 세트들을 포함한 배열
+            },
+            options: { // 차트의 옵션 설정
+                responsive: true, // true로 설정시 차트가 반응형으로 크기를 조정할 수 있도록 허용
+                scales: { // x축과 y축에 대한 옵션들을 설정
+                    x: {
+                        display: true, // 축 표시여부
+                        title: { // 축 제목 지정
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Stock Price'
+                        }
+                    }
+                }
+            }
+        });
+        // onmessage는 웹소켓에서 메시지가 도착했을 때 자동으로 호출되는 함수
+        // event를 매개변수로 받고 이 이벤트 객체는 수신된 메시지와 정보를 포함하고 있음
+        socket.onmessage = function (event) {
+            // 전달 받은 제이슨 형식을 자바스크립트의 객체로 변환
+            var data = JSON.parse(event.data);  // 받은 데이터 파싱
+            var time = new Date().toLocaleTimeString();  // 현재 날짜와 시간을 문자열로 변환
+            console.log(time); // 오후 6:06:44 <- 요런식으로 출력
+            // 데이터 업데이트
+            console.log(data.length)
+            labels.push(time); // x축에 표시될 라벨 배열 끝에 시간 추가
+            for (var i = 0; i < data.length; i++) {
+                var company = data[i].company;
+                var price = data[i].price;
+
+                // 해당 회사 데이터셋이 존재하지 않으면 생성
+                if (!datasets[i]) {
+                    datasets[i] = {
+                        label: company, // 회사명
+                        data: [], // 데이터 리스트
+                        borderColor: getRandomColor(), // 랜덤 컬러
+                        fill: false // (line chart)에서 데이터 포인트 간을 선으로 연결하지 않도록 설정하는 옵션
+                    };
+                }
+
+                // 데이터셋에 데이터 추가
+                datasets[i].data.push(price); // 데이터셋의 키이름(data)에 price데이터 추가
+            }
+
+            // 최대 10개의 데이터 유지
+            if (labels.length > 10) { // x축 라벨에 데이터가 10개 이상 쌓이면 오래된 것부터 삭제
+                labels.shift();  // 가장 오래된 라벨 삭제
+                for (var i = 0; i < datasets.length; i++) {
+                    datasets[i].data.shift();  // 가장 오래된 데이터 제거
+                }
+            }
+
+            // 차트 업데이트
+            chart.update();
+        };
+
+        // 랜덤한 색상 생성
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    });
+</script>
+</body>
+</html>

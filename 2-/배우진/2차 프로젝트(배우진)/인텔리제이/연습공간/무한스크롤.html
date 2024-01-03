@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    .boxs {
+      position: absolute;
+      bottom: 50%;
+      right: 75%;
+    }
+    section {
+      position: absolute;
+      width: 1000px;
+      height: 500px;
+    }
+    html, body{ margin: 0;}
+    section .box{
+      background: tomato; color: white;
+      box-sizing: border-box; padding: 30px 10px;
+      margin: 20px;
+    }
+    section .box:nth-child(2n) {background:teal;}
+  </style>
+</head>
+<body>
+<div class="boxs">
+<section>
+  <div class="box">1번째 블록</div>
+  <div class="box">2번째 블록</div>
+  <div class="box">3번째 블록</div>
+  <div class="box">4번째 블록</div>
+</section>
+</div>
+<script>
+  var count = 2;
+  window.onscroll = function () {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      var toAdd = document.createElement("div");
+      toAdd.classList.add("box")
+      toAdd.textContent = `${++count}번째 블록`
+      document.querySelector('section').appendChild(toAdd);
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="hi.Repository.mybatis.RestMapper">
+
+<!--나중에 수정해야함-->
+<!--    <insert id="save" useGeneratedKeys="true" keyProperty="id">-->
+<!--        <selectKey keyProperty="id" resultType="java.lang.Long" order="BEFORE">-->
+<!--            SELECT item_seq.NEXTVAL FROM DUAL-->
+<!--        </selectKey>-->
+<!--        INSERT INTO item (id, item_name, price, quantity)-->
+<!--        VALUES (#{id}, #{itemName}, #{price}, #{quantity})-->
+<!--    </insert>-->
+
+<!--    where member_id = #{id}-->
+    <select id="findByroadName" resultType="Rest">
+        select "도로명전체주소" as addr, "경도" as har, "위도" as lat
+        from restaurants
+        where 도로명전체주소 like '%'||  #{search} ||'%'
+    </select>
+
+</mapper>
+

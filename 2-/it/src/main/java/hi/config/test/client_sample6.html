@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Price Chart</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.js"></script>
+</head>
+<body>
+<canvas id="chart"></canvas>
+
+<script>
+    $(document).ready(function () {
+        var socket = new WebSocket("ws://localhost:8060");  // WebSocket 연결
+
+        var labels = [];  // X축 레이블
+        var prices = [];  // 가격 데이터
+
+        var ctx = document.getElementById("chart").getContext("2d");
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "삼성전자",
+                    data: prices,
+                    borderColor: 'blue',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Stock Price'
+                        }
+                    }
+                }
+            }
+        });
+
+        socket.onmessage = function (event) {
+            var data = JSON.parse(event.data);  // 받은 데이터 파싱
+            var time = new Date().toLocaleTimeString();  // 현재 시간
+
+            // 데이터 업데이트
+            labels.push(time);
+            prices.push(data.price);
+
+            // 최대 10개의 데이터 유지
+            if (labels.length > 10) {
+                labels.shift();  // 가장 오래된 데이터 제거
+                prices.shift();  // 가장 오래된 데이터 제거
+            }
+
+            // 차트 업데이트
+            chart.update();
+        };
+    });
+</script>
+</body>
+</html>

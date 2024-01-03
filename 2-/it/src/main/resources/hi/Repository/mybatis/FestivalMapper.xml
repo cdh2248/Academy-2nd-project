@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="hi.Repository.mybatis.FestivalMapper">
+    <select id="findAllFestival" resultType="Festival">
+        select FINDEX, F_NAME as fName, PLACE as place,OPEN_DATE as openDate ,CLOSE_DATE as closeDate ,INFO ,HOST_OR as hostOr,PHONE_NUMBER as phoneNumber,ADRESS as ADDRESS ,LATITUDE ,HARDNESS ,X ,Y ,GO
+        from FESTIVAL
+    </select>
+
+    <select id="findFestival" resultType="Festival">
+        select FINDEX, F_NAME as fName, PLACE as place,OPEN_DATE as openDate ,CLOSE_DATE as closeDate ,INFO ,HOST_OR as hostOr,PHONE_NUMBER as phoneNumber,ADRESS as ADDRESS ,LATITUDE ,HARDNESS ,X ,Y ,GO
+        from FESTIVAL
+        WHERE FINDEX = #{num}
+    </select>
+
+    <select id="searchFestival" resultType="Festival">
+        select FINDEX, F_NAME as fName, PLACE as place,OPEN_DATE as openDate ,CLOSE_DATE as closeDate ,INFO ,HOST_OR as hostOr,PHONE_NUMBER as phoneNumber,ADRESS as ADDRESS ,LATITUDE ,HARDNESS ,X ,Y ,GO
+        from FESTIVAL
+        WHERE F_NAME LIKE '%' || #{keyword} || '%'
+    </select>
+
+    <select id="getAftertodayFestival" resultType="Festival">
+        select FINDEX, F_NAME as fName, PLACE as place,OPEN_DATE as openDate ,CLOSE_DATE as closeDate ,INFO ,HOST_OR as hostOr,PHONE_NUMBER as phoneNumber,ADRESS as ADDRESS ,LATITUDE ,HARDNESS ,X ,Y ,GO
+        from FESTIVAL
+        WHERE OPEN_DATE >= TRUNC(SYSDATE)
+    </select>
+</mapper>

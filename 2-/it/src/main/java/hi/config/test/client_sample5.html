@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Example</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.js"></script>
+    <script>
+        var chart;  // 막대그래프 차트 객체
+
+        $(document).ready(function() {
+            // 웹소켓 연결
+            var socket = new WebSocket("ws://localhost:8060/");
+
+            // 웹소켓 연결 성공 시 이벤트 핸들러
+            socket.onopen = function(event) {
+                console.log("WebSocket connected.");
+            };
+
+            // 웹소켓으로부터 데이터 수신 시 이벤트 핸들러
+            socket.onmessage = function(event) {
+                var receivedData = event.data;
+                console.log("Received data: " + receivedData);
+
+                updateChart(receivedData);
+            };
+
+            // 웹소켓 연결 종료 시 이벤트 핸들러
+            socket.onclose = function(event) {
+                console.log("WebSocket disconnected.");
+            };
+
+            // 초기 막대그래프 설정
+            var ctx = document.getElementById('bar-chart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Sales',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+
+        function updateChart(data) {
+            var dataArray = JSON.parse(data);
+            var labels = [];
+            var values = [];
+
+            // 데이터를 배열로 추출
+            if (Array.isArray(dataArray)) {
+                for (var i = 0; i < dataArray.length; i++) {
+                    var item = dataArray[i];
+                    labels.push(item.category);
+                    values.push(item.sales);
+                }
+            }
+
+            // 차트 데이터 업데이트
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = values;
+            chart.update();
+
+
+        }
+
+    </script>
+</head>
+<body>
+<h2>막대그래프</h2>
+<canvas id="bar-chart" width="400" height="200"></canvas>
+</body>
+</html>

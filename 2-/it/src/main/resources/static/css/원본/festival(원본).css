@@ -1,0 +1,28 @@
+.festival-details {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    max-width: 600px;
+}
+
+.festival-details h3 {
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.festival-details p {
+    color: #555;
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.festival-details p:first-child {
+    margin-top: 10px;
+}
+
+.festival-details p:last-child {
+    margin-bottom: 10px;
+}

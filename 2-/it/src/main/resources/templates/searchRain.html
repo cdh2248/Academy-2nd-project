@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Box Model Example</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+</head>
+<body>
+
+<div class="search" method="post">
+
+    <form th:object="${festivalSearch}" method="get" class="form-inline">
+        <div STYLE="border: solid black 2px">
+
+            <div>
+               선수 번호 검색:  <input type="text" th:="${x}" />
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-secondary mb-2">검색</button>
+            </div>
+        </div>
+
+    </form>
+
+    <div>
+        <table class="table">
+            <thead>
+            </thead>
+            <tbody>
+            <tr th:each="player : ${playerBy}">
+                <td><a href="#" th:text="${player.getPlayerId}">선수번호</a>
+                </td>
+                <td><a href="#" th:text="${player.getPlayerName}">선수이름</a></td>
+                <td th:text="${player.getTeamId}">팀 번호</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+</body>
+</html>

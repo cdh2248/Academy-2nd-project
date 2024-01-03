@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!--    <script src =/static/js/chart.js></script>-->
+    <script src =/static/js/chart2.js></script>
+</head>
+<style>
+    @import "/css/template.css";
+</style>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">
+                <h1>축제</h1>
+            </div>
+        </div>
+
+        <div class="menu">
+            <ul>
+                <li>지도</li>
+                <li>통계</li>
+            </ul>
+        </div>
+<!-------------------------메인 이 부분 내용만 수정------------------------------>
+        <div class="main">
+
+
+
+
+        </div>
+<!---------------------------------------------------------------------------->
+        <div class="top">
+            <div class="login">
+                <div><input class="id" type="text" value="아이디"></div>
+                <div><input class="password" type="text" value="비밀번호"></div>
+                <div>
+                    <input type="button" value="로그인">
+                    <input type="button" value="회원가입">
+                </div>
+            </div>
+        </div>
+
+        <div class="aside">
+            <div class = "graph">
+                <div><input type="button"  value="내위치">부평구</div>
+                <div><input type="button"  value="축제위치">강릉커피축제</div>
+                <canvas id="chart" width="500" height="400"></canvas>
+                <input type="button" id="my-button" value="기온">
+                <input type="button" id="my-button2" value="강수량">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
